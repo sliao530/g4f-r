@@ -8,8 +8,8 @@ from seleniumbase import SB
 TARGET_URL = "https://game4free.net/woairenqi"
 MC_USERNAME = "ghjuop"
 
-TG_TOKEN = os.getenv("TG_TOKEN", "6423198916:AAFLZquc7GyRH6wj5ycdSC0XDK4r9DMBQUc")
-TG_CHAT = os.getenv("TG_CHAT_ID", "5300853880")
+TG_TOKEN = os.getenv("TG_TOKEN", "")
+TG_CHAT = os.getenv("TG_CHAT_ID", "")
 
 def send_tg(msg):
     if TG_TOKEN and TG_CHAT:
