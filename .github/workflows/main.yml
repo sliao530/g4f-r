@@ -1,9 +1,13 @@
 name: g4f rew (WARP + Python)
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "40 * * * *"   # 每小时抽卡一次
+    - cron: '0 */1 * * *' # 每小时自动运行
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   run:
