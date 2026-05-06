@@ -24,15 +24,25 @@ def send_tg(msg):
             pass
 
 def restart_warp():
-    """执行系统命令重启 WARP 以更换 IP"""
-    print("🔄 正在断开 WARP...")
+    """执行系统命令彻底重置 WARP 以更换 IP"""
+    print("🔄 正在断开 WARP 并清理底层缓存...")
     subprocess.run(['warp-cli', '--accept-tos', 'disconnect'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # 🌟 杀手锏 1：重启 GitHub Actions 上的 WARP 底层服务，彻底切断长连接
+    os.system('sudo systemctl restart warp-svc')
     time.sleep(3)
     
-    print("🔄 正在重新连接 WARP 以获取新 IP...")
+    print("♻️ 正在注销旧设备并重新注册 (打破 IP 粘性)...")
+    # 🌟 杀手锏 2：删除旧注册，重新生成全新的 Device ID
+    subprocess.run(['warp-cli', '--accept-tos', 'registration', 'delete'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(['warp-cli', '--accept-tos', 'registration', 'new'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    
+    # 重新配置纯代理模式并连接
+    subprocess.run(['warp-cli', '--accept-tos', 'mode', 'proxy'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     subprocess.run(['warp-cli', '--accept-tos', 'connect'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    print("⏳ 等待 WARP 隧道建立并分配新 IP (10秒)...")
-    time.sleep(10)
+    
+    print("⏳ 等待全新 WARP 隧道建立并分配新 IP (15秒)...")
+    time.sleep(15)
     
     print("🌍 检查当前新 IP:")
     os.system("curl -s -x socks5://127.0.0.1:40000 https://api.ipify.org || echo '⚠️ IP获取失败'")
